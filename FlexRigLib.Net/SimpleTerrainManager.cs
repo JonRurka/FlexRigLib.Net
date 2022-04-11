@@ -14,13 +14,13 @@ namespace FlexRigLib.Net
         private static extern IntPtr SimpleTerrainManager_New(IntPtr col);
 
         public SimpleTerrainManager()
+            : base(SimpleTerrainManager_New())
         {
-            SetHandle(SimpleTerrainManager_New());
         }
 
         public SimpleTerrainManager(Collisions_Base col)
+            : base(SimpleTerrainManager_New(col.GetHandle()))
         {
-            SetHandle(SimpleTerrainManager_New(col.GetHandle()));
         }
     }
 }

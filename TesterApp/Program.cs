@@ -9,7 +9,7 @@ namespace TesterApp
         {
             SimContext context = new SimContext();
 
-            
+            TerrainManager_Base b = new SimpleTerrainManager();
         }
     }
 }
