@@ -7,9 +7,13 @@ namespace TesterApp
     {
         static void Main(string[] args)
         {
-            SimContext context = new SimContext();
+            Collisions col = new Collisions(1, 1, 1);
 
-            TerrainManager_Base b = new SimpleTerrainManager();
+            SimpleTerrainManager terr = new SimpleTerrainManager(col);
+
+            
+
+            Console.WriteLine("Name: {0}", terr.GetTerrainName());
         }
     }
 }

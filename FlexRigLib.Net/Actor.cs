@@ -1,21 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace FlexRigLib.Net
 {
-    public class Actor
+    public class Actor : NativeObject
     {
-        private IntPtr handle;
+        private static Dictionary<IntPtr, Actor> cache = new Dictionary<IntPtr, Actor>();
 
-        public Actor(IntPtr hdl)
+        public Actor(IntPtr hdl) : 
+            base(hdl)
         {
-            handle = hdl;
         }
 
-        public IntPtr GetHandle()
+
+
+        public static Actor GetActor(IntPtr handle)
         {
-            return handle;
+            if (cache.ContainsKey(handle))
+            {
+                return cache[handle];
+            }
+
+            Actor newActor = new Actor(handle);
+
+            cache.Add(handle, newActor);
+
+            return newActor;
         }
     }
 }

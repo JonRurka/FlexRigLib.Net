@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FlexRigLib.Net
 {
-    public class NativeObject
+    public class NativeObject : IEquatable<NativeObject>
     {
         protected IntPtr handle;
 
@@ -21,6 +21,11 @@ namespace FlexRigLib.Net
         public IntPtr GetHandle()
         {
             return handle;
+        }
+
+        public bool Equals(NativeObject other)
+        {
+            return handle.Equals(other.handle);
         }
 
         public static implicit operator IntPtr(NativeObject orig)

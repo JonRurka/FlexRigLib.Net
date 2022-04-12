@@ -8,7 +8,7 @@ namespace FlexRigLib.Net
     public class TerrainManager_Base : NativeObject
     {
         [DllImport(Settings.DLL)]
-        private static extern string TerrainManager_Base_getTerrainName(IntPtr handle);
+        private static extern void TerrainManager_Base_getTerrainName(IntPtr handle, StringBuilder sb, int size);
 
         [DllImport(Settings.DLL)]
         private static extern IntPtr TerrainManager_Base_GetCollisions(IntPtr handle);
@@ -43,6 +43,14 @@ namespace FlexRigLib.Net
         public static TerrainManager_Base GetBaseInstance(IntPtr hdl)
         {
             return new TerrainManager_Base(hdl);
+        }
+
+        public string GetTerrainName()
+        {
+            const int cap = 100;
+            StringBuilder sb = new StringBuilder(cap);
+            TerrainManager_Base_getTerrainName(handle, sb, cap);
+            return sb.ToString();
         }
 
         public Collisions_Base GetCollisions()

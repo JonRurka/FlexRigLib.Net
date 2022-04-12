@@ -11,7 +11,7 @@ namespace FlexRigLib.Net
         private static extern IntPtr SimContext_New();
 
         [DllImport(Settings.DLL)]
-        private static extern float SimContext_Test(IntPtr sim_context, float a, float b);
+        private static extern Vec3 SimContext_Test(IntPtr sim_context, ActorSpawnRequest rq);
 
         [DllImport(Settings.DLL)]
         private static extern bool SimContext_LoadTerrain(IntPtr sim_context, IntPtr terrain_mgr, IntPtr collisions, float gravity);
@@ -49,9 +49,9 @@ namespace FlexRigLib.Net
             return handle;
         }
 
-        public float TestThisWorks(float a, float b)
+        public Vec3 TestThisWorks(ActorSpawnRequest rq)
         {
-            return SimContext_Test(handle, a, b);
+            return SimContext_Test(handle, rq);
         }
 
         public bool LoadTerrain(TerrainManager_Base terrain_mgr, Collisions_Base collisions, float gravity)
