@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FlexRigLib.Net.Physics;
+using FlexRigLib.Net.Physics.Collision;
+using FlexRigLib.Net.Environment;
+using FlexRigLib.Net.Utilities;
+using FlexRigLib.Net.Resources;
 
 namespace FlexRigLib.Net
 {
-    public class SimContext
+    public class SimContext : NativeObject
     {
         [DllImport(Settings.DLL)]
         private static extern IntPtr SimContext_New();
@@ -29,7 +34,7 @@ namespace FlexRigLib.Net
         private static extern void SimContext_ModifyActor(IntPtr sim_context);
 
         [DllImport(Settings.DLL)]
-        private static extern void SimContext_UpdateActors(IntPtr sim_context);
+        private static extern void SimContext_UpdateActors(IntPtr sim_context, float dt);
 
         [DllImport(Settings.DLL)]
         private static extern IntPtr SimContext_GetActorManager(IntPtr sim_context);
@@ -37,18 +42,35 @@ namespace FlexRigLib.Net
         [DllImport(Settings.DLL)]
         private static extern int SimContext_GetSimState(IntPtr sim_context);
 
-        private IntPtr handle;
+        [DllImport(Settings.DLL)]
+        private static extern bool SimContext_IsSimulationPaused(IntPtr sim_context);
 
-        public SimContext()
+        [DllImport(Settings.DLL)]
+        private static extern void SimContext_SetSimulationPaused(IntPtr sim_context, bool v);
+
+
+        public bool IsPaused
         {
-            handle = SimContext_New();
+            get
+            {
+                return SimContext_IsSimulationPaused(handle);
+            }
+            set
+            {
+                SimContext_SetSimulationPaused(handle, value);
+            }
         }
 
-        public IntPtr GetHandle()
+        public SimContext() :
+            base (SimContext_New())
         {
-            return handle;
         }
 
+
+        public void Run()
+        {
+            IsPaused = false;
+        }
         public Vec3 TestThisWorks(ActorSpawnRequest rq)
         {
             return SimContext_Test(handle, rq);
@@ -79,14 +101,14 @@ namespace FlexRigLib.Net
             SimContext_ModifyActor(handle);
         }
 
-        public void UpdateActors()
+        public void UpdateActors(float dt)
         {
-            SimContext_UpdateActors(handle);
+            SimContext_UpdateActors(handle, dt);
         }
 
-        public IntPtr GetActorManager()
+        public ActorManager GetActorManager()
         {
-            return SimContext_GetActorManager(handle);
+            return new ActorManager(SimContext_GetActorManager(handle));
         }
 
         public SimState GetSimState()

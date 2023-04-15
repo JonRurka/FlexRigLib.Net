@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace FlexRigLib.Net
+namespace FlexRigLib.Net.Resources
 {
 	public class FileBuilder : NativeObject
     {
-		[DllImport(Settings.DLL)]
-		private static extern IntPtr CreateFileBuilder();
+		[DllImport(Settings.DLL, CallingConvention = CallingConvention.Cdecl)]
+		private static extern IntPtr FileBuilder_New();
 
 		[DllImport(Settings.DLL)]
 		private static extern void FileBuilder_SetGlobals(IntPtr handle,
@@ -63,14 +63,16 @@ namespace FlexRigLib.Net
 		[DllImport(Settings.DLL)]
 		private static extern void FileBuilder_AddCab(IntPtr handle, string n1, string n2, string n3, int option);
 
-		
+		[DllImport(Settings.DLL)]
+		private static extern void FileBuilder_AddContacter(IntPtr handle, string n1);
+
 		public FileBuilder(IntPtr hdl) : 
             base(hdl)
         {
         }
 
 		public FileBuilder() :
-			base(CreateFileBuilder())
+			base(FileBuilder_New())
         {
         }
 
@@ -157,6 +159,11 @@ namespace FlexRigLib.Net
 		public void AddCab(string n1, string n2, string n3, int option)
         {
 			FileBuilder_AddCab(handle, n1, n2, n3, option);
+		}
+
+		public void AddContacter(string n1)
+        {
+			FileBuilder_AddContacter(handle, n1);
 		}
 
 	}

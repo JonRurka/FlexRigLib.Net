@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FlexRigLib.Net
+namespace FlexRigLib.Net.Physics.Collision
 {
     public class Collision_Box : NativeObject
     {

@@ -4,8 +4,8 @@ using System.Text;
 
 namespace FlexRigLib.Net
 {
-    public class Settings
+    internal class Settings
     {
-        public const string DLL = "SoftBodyLib.dll";
+        public const string DLL = "FlexRigLib.dll";
     }
 }

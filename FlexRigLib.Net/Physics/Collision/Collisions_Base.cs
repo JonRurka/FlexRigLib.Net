@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FlexRigLib.Net.Utilities;
 
-namespace FlexRigLib.Net
+namespace FlexRigLib.Net.Physics.Collision
 {
     public class Collisions_Base : NativeObject
     {
@@ -47,7 +48,7 @@ namespace FlexRigLib.Net
             int scripthandler);
 
         [DllImport(Settings.DLL)]
-        private static extern int Collisions_Base_addCollisionTri(IntPtr handle, Vec3 p1, Vec3 p2, Vec3 p3, IntPtr gm);
+        private static extern int Collisions_Base_addCollisionTri(IntPtr handle, Vec3 p1, Vec3 p2, Vec3 p3, Ground_Model gm);
 
         [DllImport(Settings.DLL)]
         private static extern void Collisions_Base_removeCollisionBox(IntPtr handle, int number);
@@ -62,7 +63,7 @@ namespace FlexRigLib.Net
         private static extern IntPtr Collisions_Base_getCollisionAAB(IntPtr handle);
 
         [DllImport(Settings.DLL)]
-        private static extern Vec3 C_primitiveCollision(IntPtr node, Vec3 velocity, float mass, Vec3 normal, float dt, IntPtr gm, float penetration);
+        private static extern Vec3 C_primitiveCollision(IntPtr node, Vec3 velocity, float mass, Vec3 normal, float dt, Ground_Model gm, float penetration);
 
 
         public static Vec3 PrimitiveCollision(Node node, Vec3 velocity, float mass, Vec3 normal, float dt, Ground_Model gm, float penetration)

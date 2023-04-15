@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FlexRigLib.Net.Physics.Collision;
+using FlexRigLib.Net.Utilities;
 
-namespace FlexRigLib.Net
+namespace FlexRigLib.Net.Environment
 {
     public class TerrainManager_Base : NativeObject
     {

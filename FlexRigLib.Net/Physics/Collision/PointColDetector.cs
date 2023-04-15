@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FlexRigLib.Net.Utilities;
 
 
-namespace FlexRigLib.Net
+namespace FlexRigLib.Net.Physics.Collision
 {
     public class PointColDetector : NativeObject
     {
@@ -17,7 +18,10 @@ namespace FlexRigLib.Net
         //private static extern int PointColDetector_hit_list(IntPtr handle, out IntPtr[] list, int size);
 
         [DllImport(Settings.DLL)]
-        private static extern int PointColDetector_hit_list(IntPtr handle, out PointID[] list, int size);
+        private static extern int PointColDetector_hit_list(IntPtr handle, [Out] PointID[] list, int size);
+
+        [DllImport(Settings.DLL)]
+        public static extern int PointColDetector_numHits(IntPtr handle);
 
         [DllImport(Settings.DLL)]
         private static extern void PointColDetector_UpdateIntraPoint(IntPtr handle, bool contactables = false);
@@ -27,6 +31,13 @@ namespace FlexRigLib.Net
 
         [DllImport(Settings.DLL)]
         private static extern void PointColDetector_query(IntPtr handle, Vec3 vec1, Vec3 vec2, Vec3 vec3, float enlargeBB);
+
+        [DllImport(Settings.DLL)]
+        private static extern Vec3 PointColDetector_Get_bbmin(IntPtr handle);
+
+        [DllImport(Settings.DLL)]
+        private static extern Vec3 PointColDetector_Get_bbmax(IntPtr handle);
+
 
         /*public class PointID : NativeObject
         {
@@ -68,31 +79,63 @@ namespace FlexRigLib.Net
             }
         }*/
 
+
+        [StructLayout(LayoutKind.Sequential)]
         public struct PointID
         {
             private IntPtr actor;
             private short node_id;
+            private IntPtr node;
 
-            public Actor Actor { get { return Actor.GetActor(actor); } }
+            public Actor Actor { get { return new Actor(actor); } }
+
             public short Node_ID { get { return node_id; } }
+
+            public Node Node {get { return new Node(Actor, node); } }
+        }
+
+        public int NumHits
+        {
+            get
+            {
+                return PointColDetector_numHits(handle);
+            }
         }
 
         public List<PointID> Hit_List
         {
             get
             {
+                int hits = PointColDetector_numHits(handle);
+                PointID[] out_list = new PointID[hits];
 
-                PointID[] out_list = new PointID[MAX_HITS];
+                PointColDetector_hit_list(handle, out_list, hits);
 
-                int numHits = PointColDetector_hit_list(handle, out out_list, MAX_HITS);
-
-                List<PointID> list = new List<PointID>(numHits);
-                for (int i = 0; i < numHits; i++)
+                List<PointID> list = new List<PointID>(hits);
+                for (int i = 0; i < hits; i++)
                 {
                     list.Add(out_list[i]);
                 }
 
                 return list;
+            }
+        }
+
+
+
+        public Vec3 BB_Min
+        {
+            get
+            {
+                return PointColDetector_Get_bbmin(handle);
+            }
+        }
+
+        public Vec3 BB_Max
+        {
+            get
+            {
+                return PointColDetector_Get_bbmax(handle);
             }
         }
 
@@ -106,6 +149,19 @@ namespace FlexRigLib.Net
         {
         }
 
+        public void UpdateIntraPoint(bool contactables = false)
+        {
+            PointColDetector_UpdateIntraPoint(handle, contactables);
+        }
 
+        public void UpdateInterPoint(bool ignorestate = false)
+        {
+            PointColDetector_UpdateInterPoint(handle, ignorestate);
+        }
+
+        public void Query(Vec3 vec1, Vec3 vec2, Vec3 vec3, float enlargeBB)
+        {
+            PointColDetector_query(handle, vec1, vec2, vec3, enlargeBB);
+        }
     }
 }

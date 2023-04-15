@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using FlexRigLib.Net.Utilities;
 
 namespace FlexRigLib.Net
 {
@@ -18,7 +19,7 @@ namespace FlexRigLib.Net
 
         public Vec3 asr_position;
         public Quat asr_rotation;
-        public Collision_Box asr_spawnbox;
+        public IntPtr asr_spawnbox;
         public int asr_origin;
 
         public bool asr_free_position;   //!< Disables the automatic spawn position adjustment

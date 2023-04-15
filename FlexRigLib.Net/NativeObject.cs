@@ -8,6 +8,8 @@ namespace FlexRigLib.Net
     {
         protected IntPtr handle;
 
+        private static Dictionary<IntPtr, NativeObject> cache = new Dictionary<IntPtr, NativeObject>();
+
         public NativeObject(IntPtr hdl)
         {
             handle = hdl;
@@ -31,6 +33,26 @@ namespace FlexRigLib.Net
         public static implicit operator IntPtr(NativeObject orig)
         {
             return orig.GetHandle();
+        }
+
+        public static T GetObject<T>(IntPtr handle, bool do_cache = true) where T : NativeObject
+        {
+            return (T)Activator.CreateInstance(typeof(T), handle);
+
+
+            /*if (!do_cache)
+                return (T)new NativeObject(handle);
+
+            if (cache.ContainsKey(handle))
+            {
+                return (T)cache[handle];
+            }
+
+            NativeObject newActor = new NativeObject(handle);
+
+            cache.Add(handle, newActor);
+
+            return (T)newActor;*/
         }
     }
 }
